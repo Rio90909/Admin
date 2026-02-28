@@ -130,7 +130,6 @@
             status: document.getElementById('match-status').value.trim(),
             toss: document.getElementById('toss-info').value.trim(),
             margin: document.getElementById('mission-info').value.trim(),
-            // The Live Action Data
             b1n: document.getElementById('b1-name').value.trim(),
             b1r: document.getElementById('b1-runs').value.trim(),
             b1b: document.getElementById('b1-balls').value.trim(),
@@ -150,17 +149,22 @@
     }
 
     function pushSquads() {
-        const pakSq = document.getElementById('pak-squad').value.trim(); const slSq = document.getElementById('sl-squad').value.trim();
-        if(!pakSq || !slSq) return; db.ref('admin_controls/squads').set({ pak: pakSq, sl: slSq }).then(() => showStatus("✅ SQUADS PUSHED!"));
+        const pakSq = document.getElementById('pak-squad').value.trim(); 
+        const slSq = document.getElementById('sl-squad').value.trim();
+        if(!pakSq || !slSq) { showStatus("⚠️ Please fill both squads!", "var(--danger-red)"); return; }
+        db.ref('admin_controls/squads').set({ pak: pakSq, sl: slSq }).then(() => showStatus("✅ SQUADS PUSHED!"));
     }
+    
     function sendAnnouncement() {
         const msg = document.getElementById('admin-msg').value.trim(); if(!msg) return;
         db.ref('fan_chat').push({ user: "🛑 OFFICIAL", text: msg.toUpperCase(), type: 'text', time: Date.now(), isAdmin: true }).then(() => { showStatus("📢 SENT!"); document.getElementById('admin-msg').value = ""; });
     }
+    
     function sendAdminImage() {
         const imgUrl = document.getElementById('admin-img').value.trim(); if(!imgUrl) return;
         db.ref('fan_chat').push({ user: "🛑 OFFICIAL", imageUrl: imgUrl, type: 'image', time: Date.now(), isAdmin: true }).then(() => { showStatus("📷 BROADCASTED!"); document.getElementById('admin-img').value = ""; });
     }
+    
     function nukeChat() { if (confirm("DELETE ALL MESSAGES?")) db.ref('fan_chat').remove().then(() => showStatus("⚠️ CHAT NUKED", "var(--danger-red)")); }
 </script>
 </body>
